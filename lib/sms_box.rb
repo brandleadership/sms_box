@@ -1,5 +1,2 @@
 require "sms_box/version"
-
-module SMSBox
-  # Your code goes here...
-end
+require "sms_box/websend_request"
