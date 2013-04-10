@@ -1,5 +1,6 @@
 require "sms_box/version"
 require "sms_box/xml_request"
+require "sms_box/xml_response"
 require "sms_box/websend_request"
 require "sms_box/client"
 
