@@ -2,16 +2,14 @@ require 'spec_helper'
 
 REQUEST = '<?xml version="1.0" encoding="UTF-8" ?>
 <SMSBoxXMLRequest>
-  <username>myuser</username>
-  <password>mypass</password>
+  <username>USERNAME</username>
+  <password>PASSWORD</password>
   <command>WEBSEND</command>
   <parameters>
-    <multiReceiver>+41790000001</multiReceiver>
-    <multiReceiver>+41790000002</multiReceiver>
-    <multiReceiver>+41790000003</multiReceiver>
-    <service>TEST</service>
-    <text>This is a test message.</text>
-    <guessOperator/>
+    <multiReceiver>234234234</multiReceiver>
+    <multiReceiver>123123123</multiReceiver>
+    <service>SERVICE</service>
+    <text>TEXT</text>
   </parameters>
 </SMSBoxXMLRequest>'
 
@@ -50,7 +48,9 @@ module SMSBox
       end
 
       it 'renders xml' do
-        request.to_xml.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<SMSBoxXMLRequest>\n  <username>USERNAME</username>\n  <password>PASSWORD</password>\n  <command>WEBSEND</command>\n  <parameters><multiReceiver>234234234</multiReceiver><multiReceiver>123123123</multiReceiver><service>SERVICE</service>TEXT</parameters>\n</SMSBoxXMLRequest>\n"
+        actual_request = Nokogiri.XML(request.to_xml)
+        expected_request = Nokogiri.XML(REQUEST)
+        actual_request.should be_equivalent_to(expected_request)
       end
     end
   end

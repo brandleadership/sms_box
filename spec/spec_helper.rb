@@ -1,4 +1,5 @@
 require 'sms_box'
+require 'equivalent-xml'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

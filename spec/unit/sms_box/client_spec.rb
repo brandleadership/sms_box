@@ -12,6 +12,8 @@ WEBSEND_RESPONSE = '<?xml version="1.0" encoding="UTF-8" ?>
 </SMSBoxXMLReply>'
 
 module SMSBox
+  class DummyResponse < XMLResponse; end
+
   describe Client do
     describe '#factory' do
 
@@ -49,7 +51,10 @@ module SMSBox
             'url',
             request.to_xml,
             :content_type => "text/xml"
-          ).and_return()
+          ).and_return('response')
+          XMLResponse.should_receive(:from_xml).
+            with('response').
+            and_return(DummyResponse.new)
         end
 
         let :request do

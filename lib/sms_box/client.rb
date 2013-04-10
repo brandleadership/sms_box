@@ -13,6 +13,9 @@ module SMSBox
       unless request.is_a? XMLRequest
         raise "Invalid request"
       end
+
+      request.username = username
+      request.password = password
       res = RestClient.post url, request.to_xml, :content_type => "text/xml"
       XMLResponse.from_xml(res)
     end
