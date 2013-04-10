@@ -1,13 +1,16 @@
 require 'spec_helper'
 
-DUMMY_RESPONSE = '<?xml version="1.0" encoding="UTF-8" ?>
+DUMMY_RESPONSE_OK = '<?xml version="1.0" encoding="UTF-8" ?>
 <SMSBoxXMLReply>
   <ok/>
-  <command name="DUMMY">
-    <receiver status="ok">+41790000001</receiver>
-    <receiver status="ok">+41790000002</receiver>
-    <receiver status="ok">+41790000003</receiver>
-  </command>
+  <command name="DUMMY"></command>
+  <requestUid>xml9677322</requestUid>
+</SMSBoxXMLReply>'
+
+DUMMY_RESPONSE_ERROR = '<?xml version="1.0" encoding="UTF-8" ?>
+<SMSBoxXMLReply>
+  <error type="ERROR_TYPE"/>
+  <command name="DUMMY"></command>
   <requestUid>xml9677322</requestUid>
 </SMSBoxXMLReply>'
 
@@ -22,9 +25,27 @@ module SMSBox
       end
     end
 
-    #describe '#from_xml' do
-      #XMLResponse.from_xml(DUMMY_RESPONSE)
-    #end
+    describe '#from_xml' do
+      it 'sets the requestUid' do
+        XMLResponse.from_xml(DUMMY_RESPONSE_OK).requestUid.should == 'xml9677322'
+      end
+
+      context 'on success' do
+        it 'success? returns true' do
+          XMLResponse.from_xml(DUMMY_RESPONSE_OK).success?.should be_true
+        end
+      end
+
+      context 'on error' do
+        it 'error? returns true' do
+          XMLResponse.from_xml(DUMMY_RESPONSE_ERROR).error?.should be_true
+        end
+
+        it 'error returns the error type' do
+          XMLResponse.from_xml(DUMMY_RESPONSE_ERROR).error.should == 'ERROR_TYPE'
+        end
+      end
+    end
 
     describe '#instantize' do
       context 'with invalid class name' do
@@ -46,6 +67,12 @@ module SMSBox
           expect{ XMLResponse.instantize('BROKEN') }.to raise_error(
             /not a SMSBox::XMLResponse/
           )
+        end
+      end
+
+      context 'with valid command' do
+        it 'instantiates and returns response' do
+          XMLResponse.instantize('DUMMY').should be_a(DummyResponse)
         end
       end
     end

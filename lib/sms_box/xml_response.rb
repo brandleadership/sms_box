@@ -1,15 +1,21 @@
 require 'nokogiri'
 require 'active_support/inflector'
+require 'active_support/core_ext/object'
 
 module SMSBox
-  STATUS_OK = 'OK'
-  STATUS_ERROR = 'ERROR'
-
   class XMLResponse
 
-    attr_accessor :status
     attr_accessor :command
     attr_accessor :requestUid
+    attr_accessor :error
+
+    def error?
+      error.present?
+    end
+
+    def success?
+      not error?
+    end
 
     def initialize
       if self.instance_of? XMLResponse
@@ -19,8 +25,15 @@ module SMSBox
 
     def self.from_xml(xml_string)
       doc = Nokogiri::XML(xml_string)
-      command = doc.xpath('//SMSBoxXMLReply/command').attr('name').value
-      response = instantize(command)
+      command = doc.xpath('//SMSBoxXMLReply/command').attr('name').text
+      res = instantize(command)
+      res.command = command
+      res.requestUid = doc.xpath('//SMSBoxXMLReply/requestUid').first.text
+      error = doc.xpath('//SMSBoxXMLReply/error')
+      unless error.empty?
+        res.error = error.attr('type').text
+      end
+      res
     end
 
     def self.instantize(command)
