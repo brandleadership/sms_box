@@ -24,11 +24,10 @@ module SMSBox
             parameters.multiReceiver r
           end
           parameters.service service
-          parameters.text text
+          parameters.text_ text
         end
         xml
       end
-
     end
   end
 end
