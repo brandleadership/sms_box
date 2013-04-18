@@ -16,8 +16,10 @@ module SMSBox
 
       request.username = username
       request.password = password
-      res = RestClient.post url, request.to_xml, :content_type => "text/xml"
-      XMLResponse.from_xml(res)
+      xml = RestClient.post url, request.to_xml, :content_type => "text/xml"
+      response = XMLResponse.from_xml(xml)
+      response.request = request
+      response
     end
 
   end

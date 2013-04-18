@@ -68,6 +68,10 @@ module SMSBox
         it 'returns a XMLResponse object' do
           response.should be_a(XMLResponse)
         end
+
+        it 'contains a reference to the request in response' do
+          response.request.should be(request)
+        end
       end
     end
   end

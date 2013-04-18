@@ -4,7 +4,7 @@ require 'active_support/core_ext/object'
 
 module SMSBox
   class XMLResponse
-
+    attr_accessor :request
     attr_accessor :command
     attr_accessor :requestUid
     attr_accessor :error
