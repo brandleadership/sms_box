@@ -3,4 +3,4 @@
 ## next
 
 * Generic XMLRequest and XMLResponse implementation
-* Implemented WEBSEND request (with multiReceiver)
+* Implemented WEBSEND request and response (with multiReceiver)
