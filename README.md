@@ -50,6 +50,11 @@ to `client.request`
     end
     res = client.request request
 
+The bang method `request!` can be used to automatically raise an
+`SMSBox::RequestException` when request failed.
+
+    res = client.request! request # raises SMSBox::RequestException when response.error? == true
+
 The status of the request can be checked on the response object
 
     res.success?

@@ -74,6 +74,30 @@ module SMSBox
         end
       end
     end
+
+    describe '#request!' do
+      let :client do
+        SMSBox.client 'url'
+      end
+
+      context 'when request succeeded' do
+        it 'returns response' do
+          response = WebsendResponse.new
+          client.should_receive(:request).and_return(response)
+          client.request!(WebsendRequest.new).should be response
+        end
+      end
+
+      context 'when request failed' do
+        it 'raises ResponseException' do
+          response = WebsendResponse.new.tap do |res|
+            res.error = 'My Error'
+          end
+          client.should_receive(:request).and_return(response)
+          expect { client.request!(WebsendRequest.new) }.to raise_error(ResponseException, /My Error/)
+        end
+      end
+    end
   end
 end
 
