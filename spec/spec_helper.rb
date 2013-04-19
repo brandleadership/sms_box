@@ -1,5 +1,6 @@
 require 'sms_box'
 require 'equivalent-xml'
+require 'nokogiri'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

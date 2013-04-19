@@ -8,6 +8,7 @@ module SMSBox
     attr_accessor :command
     attr_accessor :requestUid
     attr_accessor :error
+    attr_accessor :command_data
 
     def error?
       error.present?
@@ -25,9 +26,11 @@ module SMSBox
 
     def self.from_xml(xml_string)
       doc = Nokogiri::XML(xml_string)
-      command = doc.xpath('//SMSBoxXMLReply/command').attr('name').text
-      res = instantize(command)
-      res.command = command
+      command = doc.xpath('//SMSBoxXMLReply/command')
+      command_name = command.attr('name').text
+      res = instantize(command_name)
+      res.command = command_name
+      res.command_data = command
       res.requestUid = doc.xpath('//SMSBoxXMLReply/requestUid').first.text
       error = doc.xpath('//SMSBoxXMLReply/error')
       unless error.empty?
