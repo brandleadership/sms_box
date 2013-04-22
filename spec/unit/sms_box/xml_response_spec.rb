@@ -45,6 +45,12 @@ module SMSBox
           XMLResponse.from_xml(DUMMY_RESPONSE_ERROR).error.should == 'ERROR_TYPE'
         end
       end
+
+      context 'with response class specific data' do
+        it 'calls command_data= with payload' do
+          XMLResponse.from_xml(DUMMY_RESPONSE_OK).command_data.should be_a Nokogiri::XML::NodeSet
+        end
+      end
     end
 
     describe '#instantize' do

@@ -1,16 +1,5 @@
 require 'spec_helper'
 
-WEBSEND_RESPONSE = '<?xml version="1.0" encoding="UTF-8" ?>
-<SMSBoxXMLReply>
-  <ok/>
-  <command name="WEBSEND">
-    <receiver status="ok">+41790000001</receiver>
-    <receiver status="ok">+41790000002</receiver>
-    <receiver status="ok">+41790000003</receiver>
-  </command>
-  <requestUid>xml9677322</requestUid>
-</SMSBoxXMLReply>'
-
 module SMSBox
   class DummyResponse < XMLResponse; end
 
@@ -71,6 +60,30 @@ module SMSBox
 
         it 'contains a reference to the request in response' do
           response.request.should be(request)
+        end
+      end
+    end
+
+    describe '#request!' do
+      let :client do
+        SMSBox.client 'url'
+      end
+
+      context 'when request succeeded' do
+        it 'returns response' do
+          response = WebsendResponse.new
+          client.should_receive(:request).and_return(response)
+          client.request!(WebsendRequest.new).should be response
+        end
+      end
+
+      context 'when request failed' do
+        it 'raises ResponseException' do
+          response = WebsendResponse.new.tap do |res|
+            res.error = 'My Error'
+          end
+          client.should_receive(:request).and_return(response)
+          expect { client.request!(WebsendRequest.new) }.to raise_error(ResponseException, /My Error/)
         end
       end
     end

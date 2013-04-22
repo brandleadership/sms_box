@@ -9,6 +9,14 @@ module SMSBox
     attr_accessor :url
     attr_accessor :username, :password
 
+    def request!(request)
+      response = request(request)
+      if response.error?
+        raise ResponseException.new(response.error, response)
+      end
+      response
+    end
+
     def request(request)
       unless request.is_a? XMLRequest
         raise "Invalid request"
