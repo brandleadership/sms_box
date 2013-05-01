@@ -36,6 +36,35 @@ module SMSBox
       end
     end
 
+    describe '#decorate_xml' do
+      let :request do
+        WebsendRequest.new
+      end
+
+      let :decorated_xml do
+        Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+          request.decorate_xml(xml)
+        end
+      end
+
+      context 'with maximum_sms_amount set' do
+        it 'adds maximumSMSAmount node' do
+          decorated_xml.doc.css(
+            'SMSBoxXMLRequest > parameters > maximumSMSAmount'
+          ).should be_empty
+        end
+      end
+
+      context 'without maximum_sms_amount set' do
+        it 'does not add maximumSMSAmount node' do
+          request.maximum_sms_amount = 10
+          decorated_xml.doc.css(
+            'SMSBoxXMLRequest > parameters > maximumSMSAmount'
+          )[0].text.should == "10"
+        end
+      end
+    end
+
     describe '#to_xml' do
       let :request do
         WebsendRequest.new.tap do |r|

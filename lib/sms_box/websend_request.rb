@@ -7,6 +7,7 @@ module SMSBox
     attr_accessor :service
     attr_accessor :text
     attr_accessor :receivers
+    attr_accessor :maximum_sms_amount
 
     def initialize
       self.receivers = []
@@ -25,6 +26,9 @@ module SMSBox
           end
           parameters.service service
           parameters.text_ text
+          if maximum_sms_amount.present?
+            parameters.maximumSMSAmount maximum_sms_amount
+          end
         end
         xml
       end
